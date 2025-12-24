@@ -1,9 +1,9 @@
-# CENG476_PROJECT
 # 🫁 Lung Cancer Detection from Chest CT-Scans (VGG16)
 
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 ![Framework](https://img.shields.io/badge/Framework-TensorFlow%20%7C%20Keras-orange)
 ![Platform](https://img.shields.io/badge/Platform-Google%20Colab-blue)
+![Language](https://img.shields.io/badge/Python-3.x-yellow)
 
 ## 📌 Project Overview
 This project implements a Deep Learning model to classify Chest CT-Scan images into 4 distinct categories to assist in the early diagnosis of lung cancer. The solution utilizes **Transfer Learning (VGG16)** combined with a **Two-Stage Fine-Tuning Strategy** to achieve high performance even on a limited dataset.
@@ -16,67 +16,46 @@ This project implements a Deep Learning model to classify Chest CT-Scan images i
 
 ---
 
-## 🚀 Key Features
-* **Transfer Learning:** VGG16 (pretrained on ImageNet) used as the backbone.
-* **Handling Imbalance:** Automated **Class Weighting** (`sklearn`) applied to penalize misclassification of minority classes.
-* **Training Strategy:** A robust **Two-Stage** approach:
-    1.  *Feature Extraction:* Training only the classifier head.
-    2.  *Fine-Tuning:* Unfreezing the last block (`block5_conv1`) with a low learning rate (`1e-5`).
-* **Reproducibility:** Random seeds fixed to **31** for consistent results.
-* **Optimization:** `ReduceLROnPlateau` and `EarlyStopping` implemented to prevent overfitting.
+## 🚀 Key Features & Methodology
+We implemented several advanced techniques to handle data imbalance and improve model robustness:
+
+* **Transfer Learning:** Utilized **VGG16** (pretrained on ImageNet) as the feature extractor backbone.
+* **Handling Imbalance:** Implemented **Automated Class Weighting** (`sklearn.utils.class_weight`) to penalize misclassification of minority classes.
+* **Two-Stage Training Strategy:**
+    1.  **Stage 1 (Feature Extraction):** Training the custom classifier head while keeping the VGG16 backbone frozen.
+    2.  **Stage 2 (Fine-Tuning):** Unfreezing the last convolutional block (`block5_conv1`) with a very low learning rate (`1e-5`) to refine features.
+* **Optimization:** Used `ReduceLROnPlateau` scheduler and `EarlyStopping` to prevent overfitting.
+* **Reproducibility:** Fixed random seeds (Seed = 31) across TensorFlow, NumPy, and Python for consistent results.
 
 ---
 
-## 🛠️ How to Run the Code (Step-by-Step)
+## 🛠️ How to Run the Code
 
-This project is designed to run seamlessly on **Google Colab**. Since the dataset is downloaded directly from Kaggle, you will need a Kaggle API token.
+This project is designed to run seamlessly on **Google Colab**. Since the dataset is downloaded directly from Kaggle via API, you will need a personal Kaggle API token.
 
 ### Prerequisites
 * A Google Account (for Colab).
 * A Kaggle Account with an API Token (`kaggle.json`).
 
-### 📥 Step 1: Get the Code
-1. Download the `.ipynb` file from this repository.
+### 📥 Step 1: Open the Notebook
+1. Download the file **`Lung_Cancer_Detection_VGG16.ipynb`** from this repository.
 2. Upload it to [Google Colab](https://colab.research.google.com/).
 
-### 🔑 Step 2: Kaggle API Setup (Crucial)
+### 🔑 Step 2: Kaggle API Setup (Important)
 **For security reasons, the API token is NOT included in the code.** You must provide your own.
 
 1. Run the **first code cell** (Section 1: Kaggle Configuration).
-2. The code will pause and prompt you to upload a file:
+2. The code will pause and prompt you to upload a file with the message:
    > *"Upload your `kaggle.json` file now."*
 3. Click the **"Choose Files"** button that appears and upload your `kaggle.json`.
-   * *If you don't have one: Go to Kaggle -> Settings -> Create New API Token.*
-4. The script will automatically configure the environment and download the dataset.
+   * *If you don't have a token, create one at: Kaggle Profile -> Settings -> Create New API Token.*
+4. The script will automatically configure the environment, set permissions, and download the dataset.
 
-### ▶️ Step 3: Train & Evaluate
-1. Run the remaining cells sequentially.
-2. The notebook will:
-   * Preprocess the data.
-   * Train the model (approx. 15-20 mins on GPU).
-   * Display Training/Validation graphs.
-   * Show the **Confusion Matrix** and **Classification Report**.
-   * Run a demo on random test images at the end.
+#### 📄 Example `kaggle.json` Format
+If you need to create the file manually, it should look exactly like this:
 
----
-
-## 📊 Results
-The model was evaluated on a held-out test set (~315 images).
-
-| Metric | Performance | Notes |
-| :--- | :--- | :--- |
-| **Overall Accuracy** | **~80%** | Solid performance given the small dataset size. |
-| **F1-Score (Normal)** | **0.97** | Excellent at identifying healthy patients. |
-| **Recall (Squamous)**| **0.92** | High sensitivity for Squamous Cell Carcinoma. |
-
-*(Detailed metrics and confusion matrix are visualized within the notebook)*
-
----
-
-## 📂 Project Structure
-```text
-Lung-Cancer-Detection-VGG16/
-│
-├── Lung_Cancer_Detection_Project.ipynb  <-- MAIN CODE (Run this)
-├── README.md                            <-- Documentation
-└── .gitignore                           <-- System files ignored
+```json
+{
+  "username": "YOUR_KAGGLE_USERNAME",
+  "key": "YOUR_KAGGLE_API_KEY"
+}
